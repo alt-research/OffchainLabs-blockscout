@@ -37,7 +37,10 @@ ARG SOCKET_ROOT
 ARG CHAIN_ID
 ARG JSON_RPC
 ARG SUBNETWORK
-ARG COIN_NAME
+ARG LOGO='/images/avive_logo.svg'
+ARG FOOTER_LOGO='/images/avive_logo.svg'
+ENV LOGO=$LOGO
+ENV FOOTER_LOGO=$FOOTER_LOGO
 
 # Cache elixir deps
 ADD mix.exs mix.lock ./
@@ -52,14 +55,14 @@ ADD . .
 
 COPY . .
 
-ARG COIN
-RUN if [ "$COIN" != "" ]; then \
-        sed -i s/"POA"/"${COIN}"/g apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; \
-        sed -i "/msgid \"Ether\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/default.pot; \
-        sed -i "/msgid \"Ether\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; \
-        sed -i "/msgid \"ETH\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/default.pot; \
-        sed -i "/msgid \"ETH\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; \
-    fi
+ARG COIN='Avive'
+ENV COIN=$COIN
+ENV COIN_NAME=$COIN
+RUN sed -i s/"POA"/"${COIN}"/g apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; \
+    sed -i "/msgid \"Ether\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/default.pot; \
+    sed -i "/msgid \"Ether\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po; \
+    sed -i "/msgid \"ETH\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/default.pot; \
+    sed -i "/msgid \"ETH\"/{n;s/msgstr \"\"/msgstr \"${COIN}\"/g}" apps/block_scout_web/priv/gettext/en/LC_MESSAGES/default.po;
 
 # Run forderground build and phoenix digest
 RUN mix compile && npm install npm@latest
